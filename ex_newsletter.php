@@ -23,14 +23,37 @@ class Ex_Newsletter
         // Enregistrer notre widget
         add_action('widgets_init', function() { register_widget('Ex_Newsletter_Widget'); } );
         register_activation_hook(__FILE__, array($this, 'install'));
+        // register_uninstall_hook(__FILE__, array($this, 'uninstall'));
+        // register_deactivation_hook(__FILE__, array($this, 'deactivated'));
+
         add_action('wp_loaded', array($this, 'save_email'));
         add_action('admin_menu', array($this, 'add_admin_menu'));
     }
 
+    /**
+     * Installation du plugin
+     */
     public function install ()
     {
         global $wpdb;
         $wpdb->query("CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ex_newsletter_email (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) NOT NULL);");
+    }
+
+    /**
+     * Suppression du plugin
+     */
+    public function uninstall ()
+    {
+        global $wpdb;
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}ex_newsletter_email;");
+    }
+
+    /**
+     * Désactivation du plugin
+     */
+    public function deactivated ()
+    {
+        // Faire quelque chose ici ors de la désactivation
     }
 
     /**
@@ -108,7 +131,6 @@ class Ex_Newsletter
         <?php
     }
 }
-
 
 // Initialiser la class
 new Ex_Newsletter();
