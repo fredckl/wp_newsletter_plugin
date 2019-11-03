@@ -135,7 +135,7 @@ Ce bout de code va afficher notre formulaire sur notre site.
 
 ### Modifier la base de données
 Pour enregistrer les adresses e-mails de nos visiteurs, nous devons ajouter une nouvelle table dans notre base de données.
-Pour ce faire, créer une méthode statique install dans votre classe Ex_Newsletter comme suit :
+Pour ce faire, créer une méthode install dans votre classe Ex_Newsletter comme suit :
 
 ```php
 <?php
@@ -143,7 +143,7 @@ class Ex_Newsletter
 {
     // ...
     
-    public static function install ()
+    public function install ()
     {
         global $wpdb;
         $wpdb->query("CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ex_newsletter_email (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) NOT NULL);");
@@ -161,11 +161,11 @@ class Ex_Newsletter
     public function __construct ()
     {
         // ...
-        register_activation_hook(__FILE__, array('Ex_Newsletter', 'install'));
+        register_activation_hook(__FILE__, array($this, 'install'));
     }
 }
 ```
-Désactiver votre plugin et ré-activer le pour qu'il créer la nouvelle table.
+Désactiver votre plugin et ré-activer le pour qu'il créé la nouvelle table.
 Vous devrier votre dans phpmyadmin qu'une nouvelle table appellée wp_ex_newsletter_email vient d'être créée.
 
  
