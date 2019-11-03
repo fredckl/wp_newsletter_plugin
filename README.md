@@ -212,4 +212,159 @@ class Ex_Newsletter
 Tester votre nouvelle fonctionnalité. Aller sur la partie publique de votre site et renseigner votre adresse e-mail.
 Vous pouvez voir dans phpmyadmin qu'une nouvelle ligne contenant votre e-mail vient d'être ajoutée.
 
+### L'Administration
+Nous avons bien avancé. Nous devons maintenant réaliser l'interface de gestion des e-mails dans l'administration de Wordpress.
+Commençons par ajouter le menu. Dans le constructeur de votre classe Ex_Newsletter, insérer le code ci-dessous :
+```php
+<?php
+
+class Ex_Newsletter
+{
+    public function __construct ()
+    {
+     
+        add_action('admin_menu', array($this, 'add_admin_menu'));
+    }
+}
+```
+Puis la méthode add_admin_menu
+```php
+<?php
+
+class Ex_Newsletter
+{
+    public function add_admin_menu ()
+    {
+        add_menu_page('Newsletter', 'Newsletter', 'manage_options', 'ex_newsletter', array($this, 'menu_html'));
+    }
+}
+```
+Petite explication sur les arguments passés dans la fonction add_menu_page
+1. Le titre de la page
+2. Le titre dans le menu
+3. Les droits
+4. Le slug
+5. la fonction qui sera appelée pour afficher la page
+
+Bien, maitenant il faut créer cette méthode menu_html :
+
+```php
+<?php
+
+class Ex_Newsletter
+{
+    public function menu_html ()
+    {
+        echo '<h1>'.get_admin_page_title().'</h1>';
+        echo '<p>Bienvenue sur la page d\'accueil de la newsletter</p>';
+    }
+}
+```
+
+#### Afficher la liste des e-mails :
+Modifiez la méthode menu_html comme suit :
+
+```php
+<?php
+
+class Ex_Newsletter
+{
+    public function menu_html ()
+    {
+        global $wpdb;
+        echo '<h1>'.get_admin_page_title().'</h1>';
+        $recipients = $wpdb->get_results("SELECT email FROM {$wpdb->prefix}ex_newsletter_email");
+        ?>
+        <table>
+            <thead>
+            <tr>
+                <th>E-mail</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($recipients as $recipient): ?>
+                    <tr>
+                        <td><?php echo $recipient->email ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php
+    }
+}
+```
+Nous pouvons voir un tableau répertoriant toutes les adresses e-mails enregistrées dans notre table wp_ex_newsletter_email !
+
+Il nous reste plus qu'a afficher un bouton pour envoyer la newsletter à nos visiteurs enregistrés.
+Insérer ce code en bas de votre méthode menu_html.
+```php
+<?php
+class Ex_Newsletter
+{
+    public function menu_html ()
+    {
+        global $wpdb;
+        echo '<h1>'.get_admin_page_title().'</h1>';
+        $recipients = $wpdb->get_results("SELECT email FROM {$wpdb->prefix}ex_newsletter_email");
+        ?>
+        <table>
+            <thead>
+            <tr>
+                <th>E-mail</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($recipients as $recipient): ?>
+                    <tr>
+                        <td><?php echo $recipient->email ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <form method="post" action="">
+            <input type="hidden" name="send_newsletter" value="1"/>
+            <?php submit_button('Envoyer la newsletter') ?>
+        </form>
+        <?php
+    }
+}
+```
  
+Procédons enfin de la même façon que nous l'avons fait pour sauvegarder les emails. 
+Modifions la méthode add_admin_menu dans la classe Ex_Newsletter pour qu'elle appelle la méthode send_email et ajoutons la méthode send_email
+
+```php
+<?php
+
+class Ex_Newsletter
+{
+    public function add_admin_menu ()
+    {
+        $hook = add_menu_page('Newsletter', 'Newsletter', 'manage_options', 'ex_newsletter', array($this, 'menu_html'));
+        add_action('load-' . $hook , array($this, 'send_email'));
+    }
+
+    public function send_email ()
+    {
+        global $wpdb;
+        if (isset($_POST['ex_send_newsletter'])) {
+
+            $recipients = $wpdb->get_results("SELECT email FROM {$wpdb->prefix}ex_newsletter_email");
+            $sujet = "Lettre d'information";
+            $content = "De nouveaux articles sont disponible sur le site " . get_home_url();
+            $from = "contact@wp-newsletter.local";
+            $header = array('From: ' . $from);
+
+            foreach ($recipients as $recipient) {
+                $result = wp_mail($recipient->email, $sujet, $content, $header);
+            }
+        }
+    }
+
+}
+```
+> Attention ! Lorsque vous développer votre application en local, les e-mails envoyés sont filtrer par les fournisseurs et peuvent ne pas arriver chez le destinataire
+
+Félication, vous venez de créer votre premier plugin avec wordpress et maintenant que vous avez les bases, vous pouvez aller encore plus loin.
+
+Bonne route et bon code.
