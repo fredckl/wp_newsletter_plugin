@@ -193,7 +193,7 @@ class Ex_Newsletter
 }
 ```
 
-> Ici, nous ne vérifions pas si l'adresses email est correcte, ni même si elle est dèjà présente dans la base de données mais vous pouvez toujour le faire ultérieurement.
+> Ici, nous ne vérifions pas si l'adresses email est correcte mais vous pourrez toujours le faire ultérieurement.
  
 Il nous reste à indiquer à wordpress la présence de cette nouvelle méthode qui sera utilisée lors de la sousmission de notre formulaire.
 Ajouter le code ci-dessous dans le constructeur de la classe Ex_Newsletter :
