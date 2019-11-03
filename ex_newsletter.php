@@ -22,8 +22,16 @@ class Ex_Newsletter
     {
         // Enregistrer notre widget
         add_action('widgets_init', function() { register_widget('Ex_Newsletter_Widget'); } );
+        register_activation_hook(__FILE__, array($this, 'install'));
+    }
+
+    public function install ()
+    {
+        global $wpdb;
+        $wpdb->query("CREATE TABLE IF NOT EXISTS {$wpdb->prefix}ex_newsletter_email (id INT AUTO_INCREMENT PRIMARY KEY, email VARCHAR(255) NOT NULL);");
     }
 }
+
 
 // Initialiser la class
 new Ex_Newsletter();
