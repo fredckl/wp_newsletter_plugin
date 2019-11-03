@@ -119,8 +119,8 @@ class Ex_Newsletter_Widget extends WP_Widget
         ?>
         <form action="" method="post">
             <p>
-                <label for="zero_newsletter_email">Votre email :</label>
-                <input id="zero_newsletter_email" name="zero_newsletter_email" type="email"/>
+                <label for="ex_newsletter_email">Votre email :</label>
+                <input id="ex_newsletter_email" name="ex_newsletter_email" type="email"/>
             </p>
             <input type="submit"/>
         </form>
