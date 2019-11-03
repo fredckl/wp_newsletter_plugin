@@ -168,7 +168,48 @@ class Ex_Newsletter
 Désactiver votre plugin et ré-activer le pour qu'il créé la nouvelle table.
 Vous devrier votre dans phpmyadmin qu'une nouvelle table appellée wp_ex_newsletter_email vient d'être créée.
 
- 
+#### Insérer les données des utilisateurs
+Il faut maintenant permettre l'enregistrement des e-mails que nos visiteurs nous envoient lors de la validation du formulaire.
+Créer une nouvelle méthode dans la classe Ex_Newsletter qui va s'appeller save_email ():
+```php
+<?php
 
+class Ex_Newsletter
+{
+    // ...
+    
+    public function save_email ()
+    {
+        if (isset($_POST['ex_newsletter_email']) && !empty($_POST['ex_newsletter_email'])) {
+            global $wpdb;
+            $email = $_POST['ex_newsletter_email'];
+
+            $row = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}ex_newsletter_email WHERE email = '$email'");
+            if (is_null($row)) {
+                $wpdb->insert("{$wpdb->prefix}ex_newsletter_email", array('email' => $email));
+            }
+        }
+    }
+}
+```
+
+> Ici, nous ne vérifions pas si l'adresses email est correcte, ni même si elle est dèjà présente dans la base de données mais vous pouvez toujour le faire ultérieurement.
+ 
+Il nous reste à indiquer à wordpress la présence de cette nouvelle méthode qui sera utilisée lors de la sousmission de notre formulaire.
+Ajouter le code ci-dessous dans le constructeur de la classe Ex_Newsletter :
+```php
+<?php
+class Ex_Newsletter
+{
+    public function __construct ()
+    {
+       // ...
+        add_action('wp_loaded', array($this, 'save_email'));
+    }
+}
+```
+
+Tester votre nouvelle fonctionnalité. Aller sur la partie publique de votre site et renseigner votre adresse e-mail.
+Vous pouvez voir dans phpmyadmin qu'une nouvelle ligne contenant votre e-mail vient d'être ajoutée.
 
  
