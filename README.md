@@ -80,7 +80,7 @@ new Ex_Newsletter();
 
 Rendez-vous maitenant dans la partie Widget du dashboard de Wordpress. Si tout c'est bien passé, vous devriez voir votre widget Newsletter.
 Vous pouvez le glisser ou bon vous semble dans votre site.
----
+
 Pour le moment notre widget est vide et ne comporte aucune fonctionnalité.
 Dans un premier temps, nous souhaitons ajouter un titre pour notre formulaire.
 ```php
@@ -119,8 +119,8 @@ class Ex_Newsletter_Widget extends WP_Widget
         ?>
         <form action="" method="post">
             <p>
-                <label for="zero_newsletter_email">Votre email :</label>
-                <input id="zero_newsletter_email" name="zero_newsletter_email" type="email"/>
+                <label for="ex_newsletter_email">Votre email :</label>
+                <input id="ex_newsletter_email" name="ex_newsletter_email" type="email"/>
             </p>
             <input type="submit"/>
         </form>
@@ -151,8 +151,8 @@ class Ex_Newsletter
 
 }
 ``` 
-#### Tracer l'activiation de notre plugin dans wordpress
-Pour savoir quand wordpress active notre plugin, il existe une fonction qui permet de savoir quand le celui-ci est activé
+#### Tracer l'activation de notre plugin dans wordpress
+Pour savoir quand wordpress active notre plugin, il existe une fonction qui permet de savoir quand le celui-ci est activé.
 Ajouter le code ci-dessous dans l'initialisation de votre classe Ex_Newsletter
 ```php
 <?php
@@ -166,11 +166,11 @@ class Ex_Newsletter
 }
 ```
 Désactiver votre plugin et ré-activer le pour qu'il créé la nouvelle table.
-Vous devrier votre dans phpmyadmin qu'une nouvelle table appellée wp_ex_newsletter_email vient d'être créée.
+Vous devrier voir dans phpmyadmin qu'une nouvelle table appellée wp_ex_newsletter_email vient d'être créée.
 
 #### Insérer les données des utilisateurs
-Il faut maintenant permettre l'enregistrement des e-mails que nos visiteurs nous envoient lors de la validation du formulaire.
-Créer une nouvelle méthode dans la classe Ex_Newsletter qui va s'appeller save_email ():
+Il faut maintenant permettre l'enregistrement des e-mails que nos visiteurs nous envoient lors de la sousmission du formulaire.
+Créer une nouvelle méthode dans la classe Ex_Newsletter qui va s'appeller save_email():
 ```php
 <?php
 
