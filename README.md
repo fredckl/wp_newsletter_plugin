@@ -27,4 +27,4 @@ Vous pouvez ajouter d'autres informations utiles (ex : une description, le nom d
 ```
 
 Rendez vous dans votre dashboard Wordpress, section plugins. Vous devriez voir votre plugin prêt à être activé.
-  
+Faites-le !
