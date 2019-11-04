@@ -84,12 +84,24 @@ class Ex_Newsletter
             $sujet = "Lettre d'information";
             $content = "De nouveaux articles sont disponible sur le site " . get_home_url();
             $from = "contact@wp-newsletter.local";
-            $header = array('From: ' . $from);
+            $header = array('From: ' . $from, 'Content-Type: text/html; charset=UTF-8');
 
             foreach ($recipients as $recipient) {
                 $result = wp_mail($recipient->email, $sujet, $content, $header);
             }
+
+            add_action('newsletter_form_success', [$this, 'messageSuccess']);
         }
+    }
+
+
+    public function messageSuccess ()
+    {
+        ?>
+        <p class="update-message">
+            Les e-mails ont bien été envoyés.
+        </p>
+        <?php
     }
 
     /**
@@ -109,6 +121,8 @@ class Ex_Newsletter
         global $wpdb;
         echo '<h1>'.get_admin_page_title().'</h1>';
         $recipients = $wpdb->get_results("SELECT email FROM {$wpdb->prefix}ex_newsletter_email");
+        echo do_action('newsletter_form_success');
+
         ?>
         <table>
             <thead>
