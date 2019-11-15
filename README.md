@@ -2,8 +2,8 @@
 
 ### Déclaration du plugin
 les plugins sont déclarés dans le répertoire wp-content/plugins. Allez dans ce répertoire,
-créer un nouveau dossier appelé ex_newsletter. Maintenant pour déclarer un plugin, 
-il vous suffit de créer un fichier ex_newsletter.php et de renseigner au minimum le nom de celui-ci. 
+créer un nouveau dossier appelé ex_newsletter. Maintenant pour déclarer un plugin,
+il vous suffit de créer un fichier ex_newsletter.php et de renseigner au minimum le nom de celui-ci.
 
 ```php
 <?php
@@ -26,28 +26,28 @@ Vous pouvez ajouter d'autres informations utiles (ex : une description, le nom d
  */
 ```
 
-Rendez vous dans votre dashboard Wordpress, section plugins. Vous devriez voir votre plugin prêt à être activé.
+Rendez vous dans votre dashboard Wordpress, section Extensions. Vous devriez voir votre plugin prêt à être activé.
 Faites-le !
 
 
 ### Création d'un widget
-Les widgets permet d'inserer facile des elements dans notre site. Commençons tout de suite par en créer
+Les widgets permet d'insérer facile des éléments dans notre site. Commençons tout de suite par en créer
 un que nous pourrons placer ou bon nous semble sur notre site.
 Dans votre plugin, créer un fichier ex_newsletter_widget.php et écrivez le code suivant :
 ```php
 <?php
 
-class Ex_Newsletter_Widget extends WP_Widget 
+class Ex_Newsletter_Widget extends WP_Widget
 {
     public function __construct ()
     {
         parent::__construct(
             'ex_newsletter', // ID
             'Newsletter', // Nom
-            // Options 
+            // Options
             array('description' => "Un formulaire d'inscription à la newsletter."));
     }
-    
+
     public function widget ($args, $instance)
     {
         echo 'widget newsletter';
@@ -93,7 +93,7 @@ class Ex_Newsletter_Widget extends WP_Widget
         $title = isset($instance['title']) ? $instance['title'] : '';
         ?>
         <p>
-            <label for="<?php echo $this->get_field_name( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+            <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
             <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo  $title; ?>" />
         </p>
         <?php
@@ -142,7 +142,7 @@ Pour ce faire, créer une méthode install dans votre classe Ex_Newsletter comme
 class Ex_Newsletter
 {
     // ...
-    
+
     public function install ()
     {
         global $wpdb;
@@ -150,7 +150,7 @@ class Ex_Newsletter
     }
 
 }
-``` 
+```
 #### Tracer l'activation de notre plugin dans wordpress
 Pour savoir quand wordpress active notre plugin, il existe une fonction qui permet de savoir quand le celui-ci est activé.
 Ajouter le code ci-dessous dans l'initialisation de votre classe Ex_Newsletter
@@ -177,7 +177,7 @@ Créer une nouvelle méthode dans la classe Ex_Newsletter qui va s'appeller save
 class Ex_Newsletter
 {
     // ...
-    
+
     public function save_email ()
     {
         if (isset($_POST['ex_newsletter_email']) && !empty($_POST['ex_newsletter_email'])) {
@@ -193,8 +193,8 @@ class Ex_Newsletter
 }
 ```
 
-> Ici, nous ne vérifions pas si l'adresses email est correcte mais vous pourrez toujours le faire ultérieurement.
- 
+> Ici, nous ne vérifions pas si l'adresse email est correcte mais vous pourrez toujours le faire ultérieurement.
+
 Il nous reste à indiquer à wordpress la présence de cette nouvelle méthode qui sera utilisée lors de la sousmission de notre formulaire.
 Ajouter le code ci-dessous dans le constructeur de la classe Ex_Newsletter :
 ```php
@@ -222,7 +222,7 @@ class Ex_Newsletter
 {
     public function __construct ()
     {
-     
+
         add_action('admin_menu', array($this, 'add_admin_menu'));
     }
 }
@@ -295,7 +295,7 @@ class Ex_Newsletter
 ```
 Nous pouvons voir un tableau répertoriant toutes les adresses e-mails enregistrées dans notre table wp_ex_newsletter_email !
 
-Il nous reste plus qu'a afficher un bouton pour envoyer la newsletter à nos visiteurs enregistrés.
+Il nous reste a afficher un bouton dans un formulaire pour envoyer la newsletter à nos visiteurs enregistrés.
 Insérer ce code en bas de votre méthode menu_html.
 ```php
 <?php
@@ -329,8 +329,8 @@ class Ex_Newsletter
     }
 }
 ```
- 
-Procédons enfin de la même façon que nous l'avons fait pour sauvegarder les emails. 
+
+Procédons enfin de la même façon que nous l'avons fait pour sauvegarder les emails.
 Modifions la méthode add_admin_menu dans la classe Ex_Newsletter pour qu'elle appelle la méthode send_email et ajoutons la méthode send_email
 
 ```php
@@ -363,8 +363,13 @@ class Ex_Newsletter
 
 }
 ```
-> Attention ! Lorsque vous développer votre application en local, les e-mails envoyés sont filtrer par les fournisseurs et peuvent ne pas arriver chez le destinataire
+> Attention !
+> Lorsque vous développer votre application en local, vous devez avoir une machine configurée correctement pour envoyer des e-mails.
 
-Félication, vous venez de créer votre premier plugin avec wordpress et maintenant que vous avez les bases, vous pouvez aller encore plus loin.
+Félication, vous venez de créer votre premier plugin avec Wordpress.
 
-Bonne route et bon code.
+#### Conclusion
+
+Dans ce tutoriel, nous avons vu qu'il est ***facile*** de créer une extension pour Wordpress et que par conséquent cela nous ouvre le champ des possibles.
+
+
